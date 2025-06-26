@@ -1,0 +1,38 @@
+{
+    "name": "LIW//TEST",
+    "description": "",
+    "dependencies": {
+        "device": "*",
+        "pxt-arcade-image-transform": "github:Llywelwyn/pxt-arcade-image-transform#cc49d72e2e8a142723b32396490505bb3194b7d0",
+        "Timers": "github:microsoft/arcade-timers#v1.1.0",
+        "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.2",
+        "arcade-text": "github:microsoft/arcade-text#v1.3.0",
+        "arcade-story": "github:microsoft/arcade-storytelling#v1.0.3",
+        "Menu Extension": "github:The-Code-Zone/Menu-pxt-extension#v0.0.4",
+        "Sprites Advanced": "github:The-Code-Zone/Sprites-Advanced-pxt-extension#v0.1.3",
+        "arcade-sprite-data": "github:The-Code-Zone/Sprite-Data-pxt-extension#v0.0.2"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md",
+        "assets.json",
+        "main.py",
+        "images.g.jres",
+        "images.g.ts",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "2.0.56",
+        "pxt": "10.0.23",
+        "targetId": "arcade"
+    },
+    "supportedTargets": [
+        "arcade"
+    ],
+    "preferredEditor": "pyprj"
+}
