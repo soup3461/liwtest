@@ -29,6 +29,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "blank"
     },
+    "image7": {
+        "data": "hwQQABAAAADPAAAAAAAAAL/MzAwAAAAAv8u8ywAADADAy7vMDMAMAPC8y8zM//8AAP+8u8y7yw8AAP+/vLu7/AAAwMy7u7v7AADMu7u7u/sAADyzsRy7+wAAwLy7+7v7zwDMu7v7u/vPzDyzu/u7+//8z7uxHLsP8M//z7y7+wAA//8PwPwPAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "e2"
+    },
     "anim1": {
         "namespace": "myAnimations",
         "id": "anim1",

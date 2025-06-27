@@ -8,6 +8,7 @@ let lta = 0
 let xp_to_add = 0
 xp_bar.setFlag(SpriteFlag.Invisible, true)
 let gstate = "battle"
+// xp_to_add = game.ask_for_number("HOW MUCH")
 let text_sprite = textsprite.create("" + xp_to_add)
 text_sprite.setIcon(assets.image`EXP`)
 text_sprite.left = 0
@@ -31,7 +32,7 @@ function go_to_xp() {
     
     for (let pip of sprites.allOfKind(XP)) {
         
-        transformSprites.rotateSprite(pip, -90)
+        transformSprites.rotateSprite(pip, 90)
         story.spriteMoveToLocation(pip, xp_bar.x, xp_bar.y, 500)
         sprites.destroy(pip, effects.rings, 50)
         xp_bar.value += 1
@@ -54,7 +55,7 @@ function level() {
     while (n < xp_to_add) {
         xp = sprites.create(assets.image`EXP`, XP)
         xp.scale = 0.5
-        story.spriteMoveToLocation(xp, randint(60, 90), randint(40, 70), 300)
+        story.spriteMoveToLocation(xp, randint(40, 100), randint(20, 100), 300)
         timer.background(function startrotate() {
             rotate(xp)
         })
@@ -88,6 +89,7 @@ function level() {
     setup_bars(boss)
     lta = 0
     gstate = "battle"
+    info.setScore(0)
     xp_bar.setFlag(SpriteFlag.Invisible, true)
 }
 
@@ -96,7 +98,8 @@ let Actor = SpriteKind.create()
 let Party = SpriteKind.create()
 let hero = sprites.create(assets.image`h1`, Actor)
 hero.setPosition(101, 66)
-let boss = sprites.create(assets.image`e1`, Actor)
+let boss_sprites = [assets.image`e1`, assets.image`e2`]
+let boss = sprites.create(boss_sprites[randint(0, 1)], Actor)
 boss.setPosition(29, 76)
 scene.setBackgroundImage(assets.image`bg`)
 let bmenuopen = false
@@ -295,7 +298,7 @@ game.onUpdate(function tick() {
 statusbars.onZero(StatusBarKind.Health, function on_zero(status: StatusBarSprite) {
     
     if (statusbars.getStatusBarAttachedTo(1, boss).value <= 0) {
-        boss.startEffect(effects.coolRadial, 500)
+        boss.startEffect(effects.disintegrate, 500)
         statusbars.getStatusBarAttachedTo(1, boss).value = statusbars.getStatusBarAttachedTo(1, boss).max
         if (sprites.readDataNumber(boss, "agi") > 5) {
             sprites.setDataNumber(boss, "agi", sprites.readDataNumber(boss, "agi") - 15)
@@ -310,6 +313,8 @@ statusbars.onZero(StatusBarKind.Health, function on_zero(status: StatusBarSprite
         sprites.destroy(statusbars.getStatusBarAttachedTo(2, boss))
         sprites.destroy(statusbars.getStatusBarAttachedTo(1, boss))
         setup_bars(boss)
+        info.changeScoreBy(1)
+        boss.setImage(boss_sprites[randint(0, 1)])
     } else if (statusbars.getStatusBarAttachedTo(1, hero).value <= 0) {
         gstate = "level"
         level()

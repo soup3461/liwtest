@@ -10,6 +10,8 @@ xp_to_add = 0
 xp_bar.set_flag(SpriteFlag.INVISIBLE, True)
 gstate = "battle"
 
+#xp_to_add = game.ask_for_number("HOW MUCH")
+
 text_sprite = textsprite.create(str(xp_to_add))
 text_sprite.set_icon(assets.image("EXP"))
 text_sprite.left = 0
@@ -29,7 +31,7 @@ def go_to_xp():
         global lta
         for pip in sprites.all_of_kind(XP):
             global lta
-            transformSprites.rotate_sprite(pip, -90)
+            transformSprites.rotate_sprite(pip, 90)
             story.sprite_move_to_location(pip, xp_bar.x, xp_bar.y, 500)
             sprites.destroy(pip, effects.rings, 50)
             xp_bar.value +=1
@@ -49,7 +51,7 @@ def level():
 
         xp = sprites.create(assets.image("EXP"), XP)
         xp.scale = 0.5
-        story.sprite_move_to_location(xp, randint(60,90), randint(40,70), 300)
+        story.sprite_move_to_location(xp, randint(40,100), randint(20,100), 300)
         def startrotate():
             rotate(xp)
         timer.background(startrotate)
@@ -80,6 +82,7 @@ def level():
     setup_bars(boss)
     lta = 0
     gstate = "battle"
+    info.set_score(0)
     xp_bar.set_flag(SpriteFlag.INVISIBLE, True)
 #level()
 
@@ -89,8 +92,8 @@ Actor = SpriteKind.create()
 Party = SpriteKind.create()
 hero = sprites.create(assets.image("h1"), Actor)
 hero.set_position(101, 66)
-
-boss = sprites.create(assets.image("e1"), Actor)
+boss_sprites = [assets.image("e1"), assets.image("e2")]
+boss = sprites.create(boss_sprites[randint(0,1)], Actor)
 boss.set_position(29, 76)
 scene.set_background_image(assets.image("bg"))
 
@@ -284,7 +287,7 @@ game.on_update(tick)
 def on_zero(status):
     global gstate, xp_to_add
     if statusbars.get_status_bar_attached_to(1, boss).value <= 0:
-        boss.start_effect(effects.cool_radial, 500)
+        boss.start_effect(effects.disintegrate, 500)
         statusbars.get_status_bar_attached_to(1, boss).value = statusbars.get_status_bar_attached_to(1, boss).max
         if sprites.read_data_number(boss, "agi") > 5:
             sprites.set_data_number(boss, "agi", sprites.read_data_number(boss, "agi")-15)
@@ -297,6 +300,8 @@ def on_zero(status):
         sprites.destroy(statusbars.get_status_bar_attached_to(2, boss))
         sprites.destroy(statusbars.get_status_bar_attached_to(1, boss))
         setup_bars(boss)
+        info.change_score_by(1)
+        boss.set_image(boss_sprites[randint(0,1)])
     elif statusbars.get_status_bar_attached_to(1, hero).value <= 0:
         gstate = "level"
         level()
