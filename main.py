@@ -11,7 +11,7 @@ xp_bar.set_flag(SpriteFlag.INVISIBLE, True)
 gstate = "battle"
 
 #xp_to_add = game.ask_for_number("HOW MUCH")
-
+game.show_long_text("Locked in an endless conflict, our hero has been fighting back the armies of the dark lord for some time now. Her only solace? each one defeated makes her ever stronger. Unfortunately this newfound power comes at a cost, she can only absorb it by being defeated by the same enemies she fights!", DialogLayout.FULL)
 text_sprite = textsprite.create(str(xp_to_add))
 text_sprite.set_icon(assets.image("EXP"))
 text_sprite.left = 0
@@ -50,8 +50,8 @@ def level():
 
 
         xp = sprites.create(assets.image("EXP"), XP)
-        xp.scale = 0.5
-        story.sprite_move_to_location(xp, randint(40,100), randint(20,100), 300)
+        xp.scale = 0.6
+        story.sprite_move_to_location(xp, randint(20,140), randint(20,60), 300)
         def startrotate():
             rotate(xp)
         timer.background(startrotate)
