@@ -43,7 +43,7 @@ def go_to_xp():
                 effects.bubbles.start_screen_effect(500)
 
 def level():
-    global xp_to_add, gstate, h1a, h1h, h1atk, h1def, lta
+    global xp_to_add, gstate, h1a, h1h, h1atk, h1def, lta, p1mp
     n = 0
     xp_bar.set_flag(SpriteFlag.INVISIBLE, False)
     while n < xp_to_add:
@@ -66,15 +66,19 @@ def level():
         h1h += 25
         h1atk += 10
         h1def += 5
+        p1mp += 20
     sprites.set_data_number(hero, "agi", h1a)
     sprites.set_data_number(hero, "atk", h1atk)
     sprites.set_data_number(hero, "def", h1def)
     sprites.set_data_number(hero, "hp", h1h)
+    sprites.set_data_number(hero, "mp", p1mp)
     console.log("agi" + sprites.read_data_number(hero, "agi") + " ATK: " + sprites.read_data_number(hero, "atk") + " DEF: " + sprites.read_data_number(hero, "def") + " HP: " + sprites.read_data_number(hero, "hp"))
     for bar in statusbars.all_of_kind(1):
         sprites.destroy(bar)
     for bars in statusbars.all_of_kind(2):
-            sprites.destroy(bars)
+        sprites.destroy(bars)
+    for bar2 in statusbars.all_of_kind(4):
+        sprites.destroy(bar2)
     sprites.set_data_number(boss, "atk", batk)
     sprites.set_data_number(boss, "def", bdef)
     sprites.set_data_number(boss, "agi", ba)
@@ -109,6 +113,7 @@ batk = 25
 h1atk = 50
 bdef = 10
 h1def = 10
+p1mp = 20
 
 sprites.set_data_boolean(hero, "acting", False)
 sprites.set_data_boolean(boss, "acting", False)
@@ -121,6 +126,7 @@ sprites.set_data_number(hero, "atk", h1atk)
 sprites.set_data_number(boss, "atk", batk)
 sprites.set_data_number(hero, "def", h1def)
 sprites.set_data_number(boss, "def", bdef)
+sprites.set_data_number(hero, "mp", p1mp)
 
 
 
@@ -129,8 +135,14 @@ def setup_bars(char: Sprite):
     agi_bar.attach_to_sprite(char,2)
     agi_bar.max = sprites.read_data_number(char, "agi")
     agi_bar.value = 0
+    if sprites.read_data_number(char, "mp") >0:
+        mp_bar = statusbars.create(20, 4, 4)
+        mp_bar.set_color(6, 12)
+        mp_bar.attach_to_sprite(char, 4)
+        mp_bar.max = sprites.read_data_number(char, "mp")
+        mp_bar.value = sprites.read_data_number(char, "mp")
     health_bar = statusbars.create(20,4,1)
-    health_bar.attach_to_sprite(char, 4)
+    health_bar.attach_to_sprite(char, 6)
     health_bar.max = sprites.read_data_number(char, "hp")
     health_bar.value = health_bar.max
 
@@ -196,7 +208,10 @@ def pmenu(char: Sprite):
             if sprites.read_data_number(char, "agi") == h1a:
                 
                 def resh1sp():
-                    h1_specials(char)
+                    if statusbars.get_status_bar_attached_to(4, char).value >= 10:
+                        h1_specials(char)
+                    else:
+                        pmenu(char)
                 timer.background(resh1sp)
     my_menu.on_button_pressed(controller.A, on_button_pressed)
 
@@ -226,11 +241,19 @@ def h1_specials(char: Sprite):
         bmenuopen = False
         if selectedIndex == 0:
             def ressp1():
-                h1_fire(char)
+                if statusbars.get_status_bar_attached_to( 4, char).value >= 20:
+                    h1_fire(char)
+                    statusbars.get_status_bar_attached_to(4, char).value -= 20
+                else:
+                    pmenu(char)
             timer.background(ressp1)
         else:
             def ressp2():
-                h1_bh(char)
+                if statusbars.get_status_bar_attached_to(4, char).value >= 10:
+                    h1_bh(char)
+                    statusbars.get_status_bar_attached_to(4, char).value -= 10
+                else:
+                    pmenu(char)
             timer.background(ressp2)
     my_menu.on_button_pressed(controller.A, on_button_pressed)
 

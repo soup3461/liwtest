@@ -71,17 +71,22 @@ function level() {
         h1h += 25
         h1atk += 10
         h1def += 5
+        p1mp += 20
     }
     sprites.setDataNumber(hero, "agi", h1a)
     sprites.setDataNumber(hero, "atk", h1atk)
     sprites.setDataNumber(hero, "def", h1def)
     sprites.setDataNumber(hero, "hp", h1h)
+    sprites.setDataNumber(hero, "mp", p1mp)
     console.log("agi" + sprites.readDataNumber(hero, "agi") + " ATK: " + sprites.readDataNumber(hero, "atk") + " DEF: " + sprites.readDataNumber(hero, "def") + " HP: " + sprites.readDataNumber(hero, "hp"))
     for (let bar of statusbars.allOfKind(1)) {
         sprites.destroy(bar)
     }
     for (let bars of statusbars.allOfKind(2)) {
         sprites.destroy(bars)
+    }
+    for (let bar2 of statusbars.allOfKind(4)) {
+        sprites.destroy(bar2)
     }
     sprites.setDataNumber(boss, "atk", batk)
     sprites.setDataNumber(boss, "def", bdef)
@@ -113,6 +118,7 @@ let batk = 25
 let h1atk = 50
 let bdef = 10
 let h1def = 10
+let p1mp = 20
 sprites.setDataBoolean(hero, "acting", false)
 sprites.setDataBoolean(boss, "acting", false)
 sprites.setDataNumber(hero, "agi", h1a)
@@ -124,13 +130,23 @@ sprites.setDataNumber(hero, "atk", h1atk)
 sprites.setDataNumber(boss, "atk", batk)
 sprites.setDataNumber(hero, "def", h1def)
 sprites.setDataNumber(boss, "def", bdef)
+sprites.setDataNumber(hero, "mp", p1mp)
 function setup_bars(char: Sprite) {
+    let mp_bar: StatusBarSprite;
     let agi_bar = statusbars.create(20, 4, 2)
     agi_bar.attachToSprite(char, 2)
     agi_bar.max = sprites.readDataNumber(char, "agi")
     agi_bar.value = 0
+    if (sprites.readDataNumber(char, "mp") > 0) {
+        mp_bar = statusbars.create(20, 4, 4)
+        mp_bar.setColor(6, 12)
+        mp_bar.attachToSprite(char, 4)
+        mp_bar.max = sprites.readDataNumber(char, "mp")
+        mp_bar.value = sprites.readDataNumber(char, "mp")
+    }
+    
     let health_bar = statusbars.create(20, 4, 1)
-    health_bar.attachToSprite(char, 4)
+    health_bar.attachToSprite(char, 6)
     health_bar.max = sprites.readDataNumber(char, "hp")
     health_bar.value = health_bar.max
 }
@@ -197,7 +213,12 @@ function pmenu(char: Sprite) {
             sprites.setDataBoolean(char, "acting", true)
             if (sprites.readDataNumber(char, "agi") == h1a) {
                 timer.background(function resh1sp() {
-                    h1_specials(char)
+                    if (statusbars.getStatusBarAttachedTo(4, char).value >= 10) {
+                        h1_specials(char)
+                    } else {
+                        pmenu(char)
+                    }
+                    
                 })
             }
             
@@ -232,11 +253,23 @@ function h1_specials(char: Sprite) {
         bmenuopen = false
         if (selectedIndex == 0) {
             timer.background(function ressp1() {
-                h1_fire(char)
+                if (statusbars.getStatusBarAttachedTo(4, char).value >= 20) {
+                    h1_fire(char)
+                    statusbars.getStatusBarAttachedTo(4, char).value -= 20
+                } else {
+                    pmenu(char)
+                }
+                
             })
         } else {
             timer.background(function ressp2() {
-                h1_bh(char)
+                if (statusbars.getStatusBarAttachedTo(4, char).value >= 10) {
+                    h1_bh(char)
+                    statusbars.getStatusBarAttachedTo(4, char).value -= 10
+                } else {
+                    pmenu(char)
+                }
+                
             })
         }
         
