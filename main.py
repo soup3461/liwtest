@@ -43,7 +43,7 @@ def go_to_xp():
                 effects.bubbles.start_screen_effect(500)
 
 def level():
-    global xp_to_add, gstate, h1a, h1h, h1atk, h1def, lta, p1mp
+    global xp_to_add, gstate, h1a, h1h, h1atk, h1def, lta, p1mp, batk, bdef, ba, bh
     n = 0
     xp_bar.set_flag(SpriteFlag.INVISIBLE, False)
     while n < xp_to_add:
@@ -82,6 +82,7 @@ def level():
     sprites.set_data_number(boss, "atk", batk)
     sprites.set_data_number(boss, "def", bdef)
     sprites.set_data_number(boss, "agi", ba)
+    sprites.set_data_number(boss, "hp", bh)
     setup_bars(hero)
     setup_bars(boss)
     lta = 0
@@ -210,7 +211,10 @@ def pmenu(char: Sprite):
                 def resh1sp():
                     if statusbars.get_status_bar_attached_to(4, char).value >= 10:
                         h1_specials(char)
+                        
+
                     else:
+                        story.sprite_say_text(statusbars.get_status_bar_attached_to(1, char), "Out of MP!")
                         pmenu(char)
                 timer.background(resh1sp)
     my_menu.on_button_pressed(controller.A, on_button_pressed)
@@ -226,7 +230,11 @@ def p_attack(char: Sprite):
     fxspri.z = 100
     animation.run_image_animation(fxspri,assets.animation("attsp"), 50, False)
     pause(150)
-    statusbars.get_status_bar_attached_to(1, boss).value -= sprites.read_data_number(char, "atk") - sprites.read_data_number(boss, "def") +1
+    dam_taken = sprites.read_data_number(char, "atk") - sprites.read_data_number(boss, "def") +1
+    statusbars.get_status_bar_attached_to(1, boss).value -= dam_taken
+    def takedam():
+            damtext(dam_taken, boss)
+    timer.background(takedam)
     fxspri.destroy()
 
 def h1_specials(char: Sprite):
@@ -245,6 +253,7 @@ def h1_specials(char: Sprite):
                     h1_fire(char)
                     statusbars.get_status_bar_attached_to(4, char).value -= 20
                 else:
+                    story.sprite_say_text(statusbars.get_status_bar_attached_to(1, char), "Not enough MP!")
                     pmenu(char)
             timer.background(ressp1)
         else:
@@ -253,6 +262,7 @@ def h1_specials(char: Sprite):
                     h1_bh(char)
                     statusbars.get_status_bar_attached_to(4, char).value -= 10
                 else:
+                    story.sprite_say_text(statusbars.get_status_bar_attached_to(1, char), "Not enough MP!")
                     pmenu(char)
             timer.background(ressp2)
     my_menu.on_button_pressed(controller.A, on_button_pressed)
@@ -268,7 +278,12 @@ def h1_fire(char: Sprite):
     fxspri.z = 100
     animation.run_image_animation(fxspri,assets.animation("fire"), 50, False)
     pause(200)
-    statusbars.get_status_bar_attached_to(1, boss).value -= sprites.read_data_number(char, "atk") - sprites.read_data_number(boss, "def") + 20
+    dam_taken = sprites.read_data_number(char, "atk") + 20 - sprites.read_data_number(boss, "def")
+    statusbars.get_status_bar_attached_to(1, boss).value -=  dam_taken
+    console.log(dam_taken) 
+    def takedam():
+        damtext(dam_taken, boss)
+    timer.background(takedam)
     fxspri.destroy()
 
 def h1_bh(char: Sprite):
@@ -281,7 +296,11 @@ def h1_bh(char: Sprite):
     fxspri.z = 100
     animation.run_image_animation(fxspri,assets.animation("big"), 50, False)
     pause(250)
-    statusbars.get_status_bar_attached_to(1, boss).value -= sprites.read_data_number(char, "atk") - sprites.read_data_number(boss, "def") + 10
+    dam_taken = sprites.read_data_number(char, "atk") + 10 - sprites.read_data_number(boss, "def") 
+    statusbars.get_status_bar_attached_to(1, boss).value -= dam_taken
+    def takedam():
+            damtext(dam_taken, boss)
+    timer.background(takedam)
     fxspri.destroy()
 
 
@@ -296,7 +315,12 @@ def enemy_att(char: Sprite):
     fxspri.z = 100
     animation.run_image_animation(fxspri,assets.animation("attsp"), 50, False)
     pause(150)
-    statusbars.get_status_bar_attached_to(1, hero).value -= sprites.read_data_number(char, "atk") - sprites.read_data_number(hero, "def")
+    dam_taken = sprites.read_data_number(char, "atk") - sprites.read_data_number(hero, "def")
+    statusbars.get_status_bar_attached_to(1, hero).value -= dam_taken
+    console.log("player damage taken: " + dam_taken)
+    def takedam():
+            damtext(dam_taken, hero)
+    timer.background(takedam)
     fxspri.destroy()
 
 def tick():
@@ -329,3 +353,13 @@ def on_zero(status):
         gstate = "level"
         level()
 statusbars.on_zero(StatusBarKind.health, on_zero)
+
+def damtext(taken: number, char: Sprite):
+    damnumber = textsprite.create(str(taken))
+    damnumber.x = char.x
+    damnumber.y = char.y
+    damnumber.vy = -50
+    damnumber.ay = 100
+    damnumber.vx = randint(-20,20)
+    damnumber.set_outline(1, 2)
+    damnumber.set_flag(SpriteFlag.AUTO_DESTROY, True)

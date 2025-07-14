@@ -91,6 +91,7 @@ function level() {
     sprites.setDataNumber(boss, "atk", batk)
     sprites.setDataNumber(boss, "def", bdef)
     sprites.setDataNumber(boss, "agi", ba)
+    sprites.setDataNumber(boss, "hp", bh)
     setup_bars(hero)
     setup_bars(boss)
     lta = 0
@@ -216,6 +217,7 @@ function pmenu(char: Sprite) {
                     if (statusbars.getStatusBarAttachedTo(4, char).value >= 10) {
                         h1_specials(char)
                     } else {
+                        story.spriteSayText(statusbars.getStatusBarAttachedTo(1, char), "Out of MP!")
                         pmenu(char)
                     }
                     
@@ -237,7 +239,11 @@ function p_attack(char: Sprite) {
     fxspri.z = 100
     animation.runImageAnimation(fxspri, assets.animation`attsp`, 50, false)
     pause(150)
-    statusbars.getStatusBarAttachedTo(1, boss).value -= sprites.readDataNumber(char, "atk") - sprites.readDataNumber(boss, "def") + 1
+    let dam_taken = sprites.readDataNumber(char, "atk") - sprites.readDataNumber(boss, "def") + 1
+    statusbars.getStatusBarAttachedTo(1, boss).value -= dam_taken
+    timer.background(function takedam() {
+        damtext(dam_taken, boss)
+    })
     fxspri.destroy()
 }
 
@@ -257,6 +263,7 @@ function h1_specials(char: Sprite) {
                     h1_fire(char)
                     statusbars.getStatusBarAttachedTo(4, char).value -= 20
                 } else {
+                    story.spriteSayText(statusbars.getStatusBarAttachedTo(1, char), "Not enough MP!")
                     pmenu(char)
                 }
                 
@@ -267,6 +274,7 @@ function h1_specials(char: Sprite) {
                     h1_bh(char)
                     statusbars.getStatusBarAttachedTo(4, char).value -= 10
                 } else {
+                    story.spriteSayText(statusbars.getStatusBarAttachedTo(1, char), "Not enough MP!")
                     pmenu(char)
                 }
                 
@@ -286,7 +294,12 @@ function h1_fire(char: Sprite) {
     fxspri.z = 100
     animation.runImageAnimation(fxspri, assets.animation`fire`, 50, false)
     pause(200)
-    statusbars.getStatusBarAttachedTo(1, boss).value -= sprites.readDataNumber(char, "atk") - sprites.readDataNumber(boss, "def") + 20
+    let dam_taken = sprites.readDataNumber(char, "atk") + 20 - sprites.readDataNumber(boss, "def")
+    statusbars.getStatusBarAttachedTo(1, boss).value -= dam_taken
+    console.log(dam_taken)
+    timer.background(function takedam() {
+        damtext(dam_taken, boss)
+    })
     fxspri.destroy()
 }
 
@@ -300,7 +313,11 @@ function h1_bh(char: Sprite) {
     fxspri.z = 100
     animation.runImageAnimation(fxspri, assets.animation`big`, 50, false)
     pause(250)
-    statusbars.getStatusBarAttachedTo(1, boss).value -= sprites.readDataNumber(char, "atk") - sprites.readDataNumber(boss, "def") + 10
+    let dam_taken = sprites.readDataNumber(char, "atk") + 10 - sprites.readDataNumber(boss, "def")
+    statusbars.getStatusBarAttachedTo(1, boss).value -= dam_taken
+    timer.background(function takedam() {
+        damtext(dam_taken, boss)
+    })
     fxspri.destroy()
 }
 
@@ -315,7 +332,12 @@ function enemy_att(char: Sprite) {
     fxspri.z = 100
     animation.runImageAnimation(fxspri, assets.animation`attsp`, 50, false)
     pause(150)
-    statusbars.getStatusBarAttachedTo(1, hero).value -= sprites.readDataNumber(char, "atk") - sprites.readDataNumber(hero, "def")
+    let dam_taken = sprites.readDataNumber(char, "atk") - sprites.readDataNumber(hero, "def")
+    statusbars.getStatusBarAttachedTo(1, hero).value -= dam_taken
+    console.log("player damage taken: " + dam_taken)
+    timer.background(function takedam() {
+        damtext(dam_taken, hero)
+    })
     fxspri.destroy()
 }
 
@@ -355,3 +377,14 @@ statusbars.onZero(StatusBarKind.Health, function on_zero(status: StatusBarSprite
     }
     
 })
+function damtext(taken: number, char: Sprite) {
+    let damnumber = textsprite.create("" + taken)
+    damnumber.x = char.x
+    damnumber.y = char.y
+    damnumber.vy = -50
+    damnumber.ay = 100
+    damnumber.vx = randint(-20, 20)
+    damnumber.setOutline(1, 2)
+    damnumber.setFlag(SpriteFlag.AutoDestroy, true)
+}
+
