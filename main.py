@@ -1,12 +1,12 @@
 XP = SpriteKind.create()
-
+music.set_volume(200)
 char_level = 1
 xp_bar = statusbars.create(120, 4, StatusBarKind.magic)
 xp_bar.bottom = 110
 xp_bar.max = 10
 xp_bar.value = 0
 lta: number = 0
-xp_to_add = 0
+xp_to_add = 300
 xp_bar.set_flag(SpriteFlag.INVISIBLE, True)
 gstate = "battle"
 
@@ -34,6 +34,15 @@ def go_to_xp():
             transformSprites.rotate_sprite(pip, 90)
             story.sprite_move_to_location(pip, xp_bar.x, xp_bar.y, 500)
             sprites.destroy(pip, effects.rings, 50)
+            music.play(music.create_sound_effect(WaveShape.SINE,
+                    49,
+                    1663,
+                    255,
+                    0,
+                    100,
+                    SoundExpressionEffect.NONE,
+                    InterpolationCurve.LINEAR),
+                music.PlaybackMode.IN_BACKGROUND)
             xp_bar.value +=1
             if xp_bar.value == xp_bar.max:
                 lta +=1
@@ -41,6 +50,8 @@ def go_to_xp():
                 xp_bar.value = 0
                 xp_bar.max += 20
                 effects.bubbles.start_screen_effect(500)
+                music.play(music.melody_playable(music.beam_up),
+                    music.PlaybackMode.IN_BACKGROUND)
 
 def level():
     global xp_to_add, gstate, h1a, h1h, h1atk, h1def, lta, p1mp, batk, bdef, ba, bh
@@ -96,7 +107,7 @@ def level():
 Actor = SpriteKind.create()
 Party = SpriteKind.create()
 hero = sprites.create(assets.image("h1"), Actor)
-hero.set_position(101, 66)
+hero.set_position(101, 70)
 boss_sprites = [assets.image("e1"), assets.image("e2")]
 boss = sprites.create(boss_sprites[randint(0,1)], Actor)
 boss.set_position(29, 76)
@@ -229,8 +240,18 @@ def p_attack(char: Sprite):
     fxspri.set_position(boss.x, boss.y)
     fxspri.z = 100
     animation.run_image_animation(fxspri,assets.animation("attsp"), 50, False)
+
+    music.play(music.create_sound_effect(WaveShape.SQUARE,
+            200,
+            1,
+            255,
+            0,
+            100,
+            SoundExpressionEffect.TREMOLO,
+            InterpolationCurve.CURVE),
+        music.PlaybackMode.IN_BACKGROUND)
     pause(150)
-    dam_taken = sprites.read_data_number(char, "atk") - sprites.read_data_number(boss, "def") +1
+    dam_taken = sprites.read_data_number(char, "atk") - sprites.read_data_number(boss, "def") + randint(-2,4)
     statusbars.get_status_bar_attached_to(1, boss).value -= dam_taken
     def takedam():
             damtext(dam_taken, boss)
@@ -277,8 +298,17 @@ def h1_fire(char: Sprite):
     fxspri.set_position(boss.x, boss.y)
     fxspri.z = 100
     animation.run_image_animation(fxspri,assets.animation("fire"), 50, False)
+    music.play(music.create_sound_effect(WaveShape.NOISE,
+            793,
+            241,
+            255,
+            0,
+            178,
+            SoundExpressionEffect.WARBLE,
+            InterpolationCurve.LOGARITHMIC),
+        music.PlaybackMode.IN_BACKGROUND)
     pause(200)
-    dam_taken = sprites.read_data_number(char, "atk") + 20 - sprites.read_data_number(boss, "def")
+    dam_taken = sprites.read_data_number(char, "atk") + randint(18,22) - sprites.read_data_number(boss, "def")
     statusbars.get_status_bar_attached_to(1, boss).value -=  dam_taken
     console.log(dam_taken) 
     def takedam():
@@ -295,8 +325,17 @@ def h1_bh(char: Sprite):
     fxspri.set_position(boss.x, boss.y)
     fxspri.z = 100
     animation.run_image_animation(fxspri,assets.animation("big"), 50, False)
+    music.play(music.create_sound_effect(WaveShape.NOISE,
+            3300,
+            1400,
+            255,
+            0,
+            150,
+            SoundExpressionEffect.WARBLE,
+            InterpolationCurve.LINEAR),
+        music.PlaybackMode.IN_BACKGROUND)
     pause(250)
-    dam_taken = sprites.read_data_number(char, "atk") + 10 - sprites.read_data_number(boss, "def") 
+    dam_taken = sprites.read_data_number(char, "atk") + randint(8,12) - sprites.read_data_number(boss, "def") 
     statusbars.get_status_bar_attached_to(1, boss).value -= dam_taken
     def takedam():
             damtext(dam_taken, boss)
@@ -314,8 +353,19 @@ def enemy_att(char: Sprite):
     fxspri.set_position(target.x, target.y)
     fxspri.z = 100
     animation.run_image_animation(fxspri,assets.animation("attsp"), 50, False)
+    music.play(music.create_sound_effect(WaveShape.SQUARE,
+            1,
+            399,
+            255,
+            0,
+            100,
+            SoundExpressionEffect.WARBLE,
+            InterpolationCurve.CURVE),
+        music.PlaybackMode.IN_BACKGROUND)
     pause(150)
-    dam_taken = sprites.read_data_number(char, "atk") - sprites.read_data_number(hero, "def")
+    dam_taken = sprites.read_data_number(char, "atk") - sprites.read_data_number(hero, "def") + randint(-2,2)
+    if dam_taken <0:
+        dam_taken = 0
     statusbars.get_status_bar_attached_to(1, hero).value -= dam_taken
     console.log("player damage taken: " + dam_taken)
     def takedam():

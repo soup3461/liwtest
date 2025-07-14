@@ -22,25 +22,6 @@ namespace myImages {
 . 1 1 1 1 1 . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 `;
-            case "image2":
-            case "h1":return img`
-. . . . f f f f f f . . . . . . 
-. . . f 2 f e e e e f f . . . . 
-. . f 2 2 2 f e e e e f f . . . 
-. . f e e e e f f e e e f . . . 
-. f e 2 2 2 2 e e f f f f . . . 
-. f 2 e f f f f 2 2 2 e f . . . 
-. f f f e e e f f f f f f f . . 
-. f e e 4 4 f b e 4 4 e f f . . 
-. . f e d d f 1 4 d 4 e e f . . 
-. . . f d d d d 4 e e e f . . . 
-. . . f e 4 4 4 e e f f . . . . 
-. . . f 2 2 2 e d d 4 . . . . . 
-. . . f 2 2 2 e d d e . . . . . 
-. . . f 5 5 4 f e e f . . . . . 
-. . . . f f f f f f . . . . . . 
-. . . . . . f f f . . . . . . . 
-`;
             case "image3":
             case "e1":return img`
 ........................
@@ -351,6 +332,33 @@ c b b c f . . . . . . c c f f .
 . . . . f c b b b b b b b b f . 
 . . . . . f c b b b b b b f . . 
 . . . . . . f f f f f f f . . . 
+`;
+            case "image2":
+            case "h1":return img`
+....fff..fff....
+...f434ffe3eff..
+.fff4d344efeeef.
+f434e3d344efe4f.
+fd34e43d34eee4f.
+f3ef3e4d3eeee4f.
+f4efd3e434ee44f.
+fe4fdff434ee4ef.
+.f4fdf1e44ee4f..
+.fefdcde4efe4f..
+..ffdde4effe4f..
+....f3e4ff.fe4f.
+.....f1e11f.fef.
+....f1113d3ffef.
+...f333bf4d4ff..
+...fe33befeef...
+..fd3f11eddef...
+..fd3f33e3df3f..
+...ffffd3fff1f..
+......f4efff13f.
+......f4eeff13f.
+......f4eeef13f.
+.....fdd3eef1f..
+.....ffffffff...
 `;
         }
         return null;

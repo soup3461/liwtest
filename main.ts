@@ -1,11 +1,12 @@
 let XP = SpriteKind.create()
+music.setVolume(200)
 let char_level = 1
 let xp_bar = statusbars.create(120, 4, StatusBarKind.Magic)
 xp_bar.bottom = 110
 xp_bar.max = 10
 xp_bar.value = 0
 let lta = 0
-let xp_to_add = 0
+let xp_to_add = 300
 xp_bar.setFlag(SpriteFlag.Invisible, true)
 let gstate = "battle"
 // xp_to_add = game.ask_for_number("HOW MUCH")
@@ -36,6 +37,7 @@ function go_to_xp() {
         transformSprites.rotateSprite(pip, 90)
         story.spriteMoveToLocation(pip, xp_bar.x, xp_bar.y, 500)
         sprites.destroy(pip, effects.rings, 50)
+        music.play(music.createSoundEffect(WaveShape.Sine, 49, 1663, 255, 0, 100, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
         xp_bar.value += 1
         if (xp_bar.value == xp_bar.max) {
             lta += 1
@@ -43,6 +45,7 @@ function go_to_xp() {
             xp_bar.value = 0
             xp_bar.max += 20
             effects.bubbles.startScreenEffect(500)
+            music.play(music.melodyPlayable(music.beamUp), music.PlaybackMode.InBackground)
         }
         
     }
@@ -104,7 +107,7 @@ function level() {
 let Actor = SpriteKind.create()
 let Party = SpriteKind.create()
 let hero = sprites.create(assets.image`h1`, Actor)
-hero.setPosition(101, 66)
+hero.setPosition(101, 70)
 let boss_sprites = [assets.image`e1`, assets.image`e2`]
 let boss = sprites.create(boss_sprites[randint(0, 1)], Actor)
 boss.setPosition(29, 76)
@@ -238,8 +241,9 @@ function p_attack(char: Sprite) {
     fxspri.setPosition(boss.x, boss.y)
     fxspri.z = 100
     animation.runImageAnimation(fxspri, assets.animation`attsp`, 50, false)
+    music.play(music.createSoundEffect(WaveShape.Square, 200, 1, 255, 0, 100, SoundExpressionEffect.Tremolo, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
     pause(150)
-    let dam_taken = sprites.readDataNumber(char, "atk") - sprites.readDataNumber(boss, "def") + 1
+    let dam_taken = sprites.readDataNumber(char, "atk") - sprites.readDataNumber(boss, "def") + randint(-2, 4)
     statusbars.getStatusBarAttachedTo(1, boss).value -= dam_taken
     timer.background(function takedam() {
         damtext(dam_taken, boss)
@@ -293,8 +297,9 @@ function h1_fire(char: Sprite) {
     fxspri.setPosition(boss.x, boss.y)
     fxspri.z = 100
     animation.runImageAnimation(fxspri, assets.animation`fire`, 50, false)
+    music.play(music.createSoundEffect(WaveShape.Noise, 793, 241, 255, 0, 178, SoundExpressionEffect.Warble, InterpolationCurve.Logarithmic), music.PlaybackMode.InBackground)
     pause(200)
-    let dam_taken = sprites.readDataNumber(char, "atk") + 20 - sprites.readDataNumber(boss, "def")
+    let dam_taken = sprites.readDataNumber(char, "atk") + randint(18, 22) - sprites.readDataNumber(boss, "def")
     statusbars.getStatusBarAttachedTo(1, boss).value -= dam_taken
     console.log(dam_taken)
     timer.background(function takedam() {
@@ -312,8 +317,9 @@ function h1_bh(char: Sprite) {
     fxspri.setPosition(boss.x, boss.y)
     fxspri.z = 100
     animation.runImageAnimation(fxspri, assets.animation`big`, 50, false)
+    music.play(music.createSoundEffect(WaveShape.Noise, 3300, 1400, 255, 0, 150, SoundExpressionEffect.Warble, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
     pause(250)
-    let dam_taken = sprites.readDataNumber(char, "atk") + 10 - sprites.readDataNumber(boss, "def")
+    let dam_taken = sprites.readDataNumber(char, "atk") + randint(8, 12) - sprites.readDataNumber(boss, "def")
     statusbars.getStatusBarAttachedTo(1, boss).value -= dam_taken
     timer.background(function takedam() {
         damtext(dam_taken, boss)
@@ -331,8 +337,13 @@ function enemy_att(char: Sprite) {
     fxspri.setPosition(target.x, target.y)
     fxspri.z = 100
     animation.runImageAnimation(fxspri, assets.animation`attsp`, 50, false)
+    music.play(music.createSoundEffect(WaveShape.Square, 1, 399, 255, 0, 100, SoundExpressionEffect.Warble, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
     pause(150)
-    let dam_taken = sprites.readDataNumber(char, "atk") - sprites.readDataNumber(hero, "def")
+    let dam_taken = sprites.readDataNumber(char, "atk") - sprites.readDataNumber(hero, "def") + randint(-2, 2)
+    if (dam_taken < 0) {
+        dam_taken = 0
+    }
+    
     statusbars.getStatusBarAttachedTo(1, hero).value -= dam_taken
     console.log("player damage taken: " + dam_taken)
     timer.background(function takedam() {
