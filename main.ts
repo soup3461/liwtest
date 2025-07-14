@@ -6,7 +6,7 @@ xp_bar.bottom = 110
 xp_bar.max = 10
 xp_bar.value = 0
 let lta = 0
-let xp_to_add = 300
+let xp_to_add = 0
 xp_bar.setFlag(SpriteFlag.Invisible, true)
 let gstate = "battle"
 // xp_to_add = game.ask_for_number("HOW MUCH")
