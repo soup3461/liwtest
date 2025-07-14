@@ -6,7 +6,7 @@ xp_bar.bottom = 110
 xp_bar.max = 10
 xp_bar.value = 0
 lta: number = 0
-xp_to_add = 300
+xp_to_add = 0
 xp_bar.set_flag(SpriteFlag.INVISIBLE, True)
 gstate = "battle"
 
