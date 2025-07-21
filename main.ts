@@ -10,7 +10,20 @@ let xp_to_add = 0
 xp_bar.setFlag(SpriteFlag.Invisible, true)
 let gstate = "battle"
 // xp_to_add = game.ask_for_number("HOW MUCH")
-game.showLongText("Locked in an endless conflict, our hero has been fighting back the armies of the dark lord for some time now. Her only solace? each one defeated makes her ever stronger. Unfortunately this newfound power comes at a cost, she can only absorb it by being defeated by the same enemies she fights!", DialogLayout.Full)
+function on_start() {
+    
+    let ᓚᘏᗢ = sprites.create(assets.image`bg2`)
+    ᓚᘏᗢ.z = 100
+    gstate = "a"
+    timer.after(5000, function intro() {
+        
+        game.showLongText("Locked in an endless conflict, our hero has been fighting back the armies of the dark lord for some time now. Her only solace? each one defeated makes her ever stronger. Unfortunately this newfound power comes at a cost, she can only absorb it by being defeated by the same enemies she fights!", DialogLayout.Full)
+        gstate = "battle"
+        ᓚᘏᗢ.destroy()
+    })
+}
+
+on_start()
 let text_sprite = textsprite.create("" + xp_to_add)
 text_sprite.setIcon(assets.image`EXP`)
 text_sprite.left = 0
@@ -70,7 +83,10 @@ function level() {
     xp_to_add = 0
     console.log(lta)
     for (let i = 0; i < lta; i++) {
-        h1a -= 10
+        if (h1a > 10) {
+            h1a -= 10
+        }
+        
         h1h += 25
         h1atk += 10
         h1def += 5

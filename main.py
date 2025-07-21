@@ -11,7 +11,18 @@ xp_bar.set_flag(SpriteFlag.INVISIBLE, True)
 gstate = "battle"
 
 #xp_to_add = game.ask_for_number("HOW MUCH")
-game.show_long_text("Locked in an endless conflict, our hero has been fighting back the armies of the dark lord for some time now. Her only solace? each one defeated makes her ever stronger. Unfortunately this newfound power comes at a cost, she can only absorb it by being defeated by the same enemies she fights!", DialogLayout.FULL)
+def on_start():
+    global gstate
+    ᓚᘏᗢ = sprites.create(assets.image("bg2"))
+    ᓚᘏᗢ.z = 100
+    gstate = "a"
+    def intro():
+        global gstate
+        game.show_long_text("Locked in an endless conflict, our hero has been fighting back the armies of the dark lord for some time now. Her only solace? each one defeated makes her ever stronger. Unfortunately this newfound power comes at a cost, she can only absorb it by being defeated by the same enemies she fights!", DialogLayout.FULL)
+        gstate = "battle"
+        ᓚᘏᗢ.destroy()
+    timer.after(5000, intro)
+on_start()
 text_sprite = textsprite.create(str(xp_to_add))
 text_sprite.set_icon(assets.image("EXP"))
 text_sprite.left = 0
@@ -73,7 +84,8 @@ def level():
     xp_to_add = 0
     console.log(lta)
     for i in range (0,lta):
-        h1a -= 10
+        if h1a > 10:
+            h1a -= 10
         h1h += 25
         h1atk += 10
         h1def += 5
