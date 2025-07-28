@@ -54,7 +54,7 @@ function go_to_xp() {
         xp_bar.value += 1
         if (xp_bar.value == xp_bar.max) {
             lta += 1
-            console.log(lta)
+            // #console.log(lta)
             xp_bar.value = 0
             xp_bar.max += 20
             effects.bubbles.startScreenEffect(500)
@@ -81,7 +81,7 @@ function level() {
     }
     go_to_xp()
     xp_to_add = 0
-    console.log(lta)
+    // console.log(lta)
     for (let i = 0; i < lta; i++) {
         if (h1a > 10) {
             h1a -= 10
@@ -97,7 +97,7 @@ function level() {
     sprites.setDataNumber(hero, "def", h1def)
     sprites.setDataNumber(hero, "hp", h1h)
     sprites.setDataNumber(hero, "mp", p1mp)
-    console.log("agi" + sprites.readDataNumber(hero, "agi") + " ATK: " + sprites.readDataNumber(hero, "atk") + " DEF: " + sprites.readDataNumber(hero, "def") + " HP: " + sprites.readDataNumber(hero, "hp"))
+    // console.log("agi" + sprites.read_data_number(hero, "agi") + " ATK: " + sprites.read_data_number(hero, "atk") + " DEF: " + sprites.read_data_number(hero, "def") + " HP: " + sprites.read_data_number(hero, "hp"))
     for (let bar of statusbars.allOfKind(1)) {
         sprites.destroy(bar)
     }
@@ -124,8 +124,8 @@ let Actor = SpriteKind.create()
 let Party = SpriteKind.create()
 let hero = sprites.create(assets.image`h1`, Actor)
 hero.setPosition(101, 70)
-let boss_sprites = [assets.image`e1`, assets.image`e2`]
-let boss = sprites.create(boss_sprites[randint(0, 1)], Actor)
+let boss_sprites = [assets.image`e1`, assets.image`e2`, assets.image`e4`]
+let boss = sprites.create(boss_sprites[randint(0, 2)], Actor)
 boss.setPosition(29, 76)
 scene.setBackgroundImage(assets.image`bg`)
 let bmenuopen = false
@@ -317,7 +317,7 @@ function h1_fire(char: Sprite) {
     pause(200)
     let dam_taken = sprites.readDataNumber(char, "atk") + randint(18, 22) - sprites.readDataNumber(boss, "def")
     statusbars.getStatusBarAttachedTo(1, boss).value -= dam_taken
-    console.log(dam_taken)
+    // console.log(dam_taken) 
     timer.background(function takedam() {
         damtext(dam_taken, boss)
     })
@@ -361,7 +361,7 @@ function enemy_att(char: Sprite) {
     }
     
     statusbars.getStatusBarAttachedTo(1, hero).value -= dam_taken
-    console.log("player damage taken: " + dam_taken)
+    // console.log("player damage taken: " + dam_taken)
     timer.background(function takedam() {
         damtext(dam_taken, hero)
     })
@@ -391,13 +391,13 @@ statusbars.onZero(StatusBarKind.Health, function on_zero(status: StatusBarSprite
         sprites.setDataNumber(boss, "def", sprites.readDataNumber(boss, "def") + 5)
         sprites.setDataNumber(boss, "hp", sprites.readDataNumber(boss, "hp") + 25)
         xp_to_add += randint(8, 12)
-        console.log("def: " + sprites.readDataNumber(boss, "def") + " atk: " + sprites.readDataNumber(boss, "atk") + " agi: " + sprites.readDataNumber(boss, "agi"))
+        // console.log("def: " + sprites.read_data_number(boss, "def") + " atk: " + sprites.read_data_number(boss, "atk") + " agi: " + sprites.read_data_number(boss, "agi"))
         text_sprite.setText("" + xp_to_add)
         sprites.destroy(statusbars.getStatusBarAttachedTo(2, boss))
         sprites.destroy(statusbars.getStatusBarAttachedTo(1, boss))
         setup_bars(boss)
         info.changeScoreBy(1)
-        boss.setImage(boss_sprites[randint(0, 1)])
+        boss.setImage(boss_sprites[randint(0, 3)])
     } else if (statusbars.getStatusBarAttachedTo(1, hero).value <= 0) {
         gstate = "level"
         level()

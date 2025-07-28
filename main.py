@@ -57,7 +57,7 @@ def go_to_xp():
             xp_bar.value +=1
             if xp_bar.value == xp_bar.max:
                 lta +=1
-                console.log(lta)
+                ##console.log(lta)
                 xp_bar.value = 0
                 xp_bar.max += 20
                 effects.bubbles.start_screen_effect(500)
@@ -82,7 +82,7 @@ def level():
 
     go_to_xp()
     xp_to_add = 0
-    console.log(lta)
+    #console.log(lta)
     for i in range (0,lta):
         if h1a > 10:
             h1a -= 10
@@ -95,7 +95,7 @@ def level():
     sprites.set_data_number(hero, "def", h1def)
     sprites.set_data_number(hero, "hp", h1h)
     sprites.set_data_number(hero, "mp", p1mp)
-    console.log("agi" + sprites.read_data_number(hero, "agi") + " ATK: " + sprites.read_data_number(hero, "atk") + " DEF: " + sprites.read_data_number(hero, "def") + " HP: " + sprites.read_data_number(hero, "hp"))
+    #console.log("agi" + sprites.read_data_number(hero, "agi") + " ATK: " + sprites.read_data_number(hero, "atk") + " DEF: " + sprites.read_data_number(hero, "def") + " HP: " + sprites.read_data_number(hero, "hp"))
     for bar in statusbars.all_of_kind(1):
         sprites.destroy(bar)
     for bars in statusbars.all_of_kind(2):
@@ -120,8 +120,8 @@ Actor = SpriteKind.create()
 Party = SpriteKind.create()
 hero = sprites.create(assets.image("h1"), Actor)
 hero.set_position(101, 70)
-boss_sprites = [assets.image("e1"), assets.image("e2")]
-boss = sprites.create(boss_sprites[randint(0,1)], Actor)
+boss_sprites = [assets.image("e1"), assets.image("e2"), assets.image("e4")]
+boss = sprites.create(boss_sprites[randint(0,2)], Actor)
 boss.set_position(29, 76)
 scene.set_background_image(assets.image("bg"))
 
@@ -322,7 +322,7 @@ def h1_fire(char: Sprite):
     pause(200)
     dam_taken = sprites.read_data_number(char, "atk") + randint(18,22) - sprites.read_data_number(boss, "def")
     statusbars.get_status_bar_attached_to(1, boss).value -=  dam_taken
-    console.log(dam_taken) 
+    #console.log(dam_taken) 
     def takedam():
         damtext(dam_taken, boss)
     timer.background(takedam)
@@ -379,7 +379,7 @@ def enemy_att(char: Sprite):
     if dam_taken <0:
         dam_taken = 0
     statusbars.get_status_bar_attached_to(1, hero).value -= dam_taken
-    console.log("player damage taken: " + dam_taken)
+    #console.log("player damage taken: " + dam_taken)
     def takedam():
             damtext(dam_taken, hero)
     timer.background(takedam)
@@ -404,13 +404,13 @@ def on_zero(status):
         sprites.set_data_number(boss, "def", sprites.read_data_number(boss, "def")+5)
         sprites.set_data_number(boss, "hp", sprites.read_data_number(boss, "hp")+25)
         xp_to_add += randint(8,12)
-        console.log("def: " + sprites.read_data_number(boss, "def") + " atk: " + sprites.read_data_number(boss, "atk") + " agi: " + sprites.read_data_number(boss, "agi"))
+        #console.log("def: " + sprites.read_data_number(boss, "def") + " atk: " + sprites.read_data_number(boss, "atk") + " agi: " + sprites.read_data_number(boss, "agi"))
         text_sprite.set_text(str(xp_to_add))
         sprites.destroy(statusbars.get_status_bar_attached_to(2, boss))
         sprites.destroy(statusbars.get_status_bar_attached_to(1, boss))
         setup_bars(boss)
         info.change_score_by(1)
-        boss.set_image(boss_sprites[randint(0,1)])
+        boss.set_image(boss_sprites[randint(0,3)])
     elif statusbars.get_status_bar_attached_to(1, hero).value <= 0:
         gstate = "level"
         level()
